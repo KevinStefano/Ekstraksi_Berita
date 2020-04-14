@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title> MY WEBSITE NOW</title>
+    </head>
+    <body>
+        <section>
+            <img class="foto" src="https://miro.medium.com/max/700/1*HgXA9v1EsqlrRDaC_iORhQ.png"
+            width="1500" height="500">
+            <img class="foto" src="https://www.ontotext.com/wp-content/uploads/2016/06/Semantic-Information-Extraction.png"
+            width="1500" height="500">
+          </section>
+          <section >
+              <center><h1>TEXT EXTRACTION</h1></center>
+              <p><center>Algoritma pencocokan string (pattern) Knuth-Morris-Pratt (KMP) dan Algoritma Boyer-Moore merupakan algoritma yang lebih baik daripada brute force. Pada Tugas Kecil IV kali ini Anda diminta membuat aplikasi sederhana ekstraksi informasi dengan kedua algoritma tersebut, plus menggunakan regular expression (regex).Terdapat dua jenis pencocokan string yang Anda lakukan. Pertama, exact match dengan keyword yang diberikan pengguna untuk memfilter kalimat yang akan diproses informasinya. Semua teknik (KMP, BM, dan regex) bisa digunakan untuk fitur ini. Kedua, ekstraksi jumlah dan waktu dari kalimat hasil exact match dengan menggunakan regex.
+                Pencarian tidak bersifat case sensitive, jadi huruf besar dan huruf kecil dianggap sama (hal ini dapat dilakukan dengan mengganggap seluruh karakter di dalam pattern dan teks sebagai huruf kecil semua atau huruf kapital semua). 
+            </center></p>
+            
+          </section>
+
+          <form">
+            <label for="folder">Folder :</label>
+            <input type="text" id="folder" name="folder"><br><br>
+            <label for="keyword">Keyword:</label>
+            <input type="text" id="keyword" name="keyword"><br><br>
+            <label for="algoritma">Choose Algoritma:</label>
+            <select id="algo">
+            <option label="Boyer-Moore">Boyer-Moore</option>
+            <option label="KMP">KMP</option>
+            <option label="Regex">Regex</option></select>
+          </form>
+        <button id="click">submit</button>
+    <script>
+        const spawn = require("child_process").spawn;
+
+        const process = spawn("python",["./regex.py"]);
+        var idx = 0;
+        var j = 0;
+        playfoto();
+        var person = prompt("Please enter your name", "Harry Potter");
+        document.getElementById("click").onclick = function() {mainFunction()}
+        
+        function mainFunction() {
+            //DO inputFOLDER()
+        }
+
+        function inputFolder() {
+            document.getElementById("folder").value
+        }
+
+        function inputKeyword() {
+            document.getElementById("keyword").value
+        }
+
+        function inputAlgo() {
+            document.getElementById("algo").value
+        }
+
+        function playfoto() {
+            var i;
+            var slide = document.getElementsByClassName("foto");
+            for (i = 0; i <= slide.length-1; i++) {
+                slide[i].style.display = "none";
+            }
+            idx=(idx%2+1);
+            slide[idx-1].style.display = "flex";
+            setTimeout(playfoto, 2000);
+
+        }
+
+    </script>
+    </body>
+</html>
+
