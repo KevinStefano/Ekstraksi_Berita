@@ -1,4 +1,6 @@
 import re;
+from KMP import KMP;
+from BooyerMoore import BooyerMoore;
 
 hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming)'
 bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des)'
@@ -7,12 +9,32 @@ def splitTexttoSentence(text):
     hasil = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',text)
     return hasil
 
-def searchKeyWordRegex(stringInput, text):
+def searchKeywordRegex(stringInput, text):
     i=0;
     idx = []
     for sentence in text:
         hasil = re.search(stringInput,sentence)
         if (hasil) :
+            idx.append(i)
+        i=i+1
+    return idx
+
+def searchKeywordKMP(stringInput, text):
+    i=0;
+    idx = []
+    for sentence in text:
+        hasil = KMP(stringInput,sentence)
+        if (hasil==1) :
+            idx.append(i)
+        i=i+1
+    return idx
+
+def searchKeywordBooyerMoore(stringInput, text):
+    i=0;
+    idx = []
+    for sentence in text:
+        hasil = BooyerMoore(stringInput,sentence)
+        if (hasil==1) :
             idx.append(i)
         i=i+1
     return idx
@@ -69,7 +91,7 @@ splitnormal = splitTexttoSentence(stringnormal)
 string = stringnormal.lower()
 #keyword= input().lower()
 split = splitTexttoSentence(string)
-for index in searchKeyWordRegex('terkonfirmasi positif'.lower(),split):
+for index in searchKeywordBooyerMoore('terkonfirmasi positif'.lower(),split):
     if (searchDate(split[index])):
         print(searchDate(split[index]))
     else:

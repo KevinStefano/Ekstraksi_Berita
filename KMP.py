@@ -52,10 +52,10 @@ def KMP(keyword, text):
     return found
 
 
-key = "ababababca"
-print(len(key))
-print(tabelBorder(key))
+# key = "ababababca"
+# print(len(key))
+# print(tabelBorder(key))
 
-print(KMP("abacab","abacaabaccabacab"))
+# print(KMP("abacab","abacaabaccabacab"))
 
 
