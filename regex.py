@@ -1,6 +1,6 @@
 import re;
 
-hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu)'
+hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming)'
 bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des)'
 
 def splitTexttoSentence(text):
