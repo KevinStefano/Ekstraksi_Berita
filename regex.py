@@ -2,11 +2,18 @@ import re;
 from KMP import KMP;
 from BooyerMoore import BooyerMoore;
 
-hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming)'
-bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des)'
+hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming|monday|teusday|wednesday|thursday|friday|saturday|sunday)'
+bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)'
+angka = '(satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|puluh|ratus|ribu|ratus|juta|ribu|belas|sebelas|sepuluh|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|milion)'
+ket = '(sebelumnya|setelahnya|berlalu|usai|yang lalu|yang akan datang|lalu)'
+#ket_orang = '(orang|korban|korban jiwa|ODP|PDP)'
+
+ket_number = '(st|rd|nd|th)'
 
 def splitTexttoSentence(text):
-    hasil = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s',text)
+    #hasil = re.split(r'((?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\!|\?)\s)',text)
+  
+    hasil = text.split('. ')
     return hasil
 
 def searchKeywordRegex(stringInput, text):
@@ -41,13 +48,17 @@ def searchKeywordBooyerMoore(stringInput, text):
 
 def searchDate(stringInput):
     patterns = []
-    patterns.append(hari+'\s\(*(([3][0-1]|[0-2]*[0-9])(\/|\-)([0]*[1-9]|[1][0-2])(\/|\-)*(\d{4})*)\)*') #Sabtu (11-1-2000)
-    patterns.append(hari+'\,\s(([3][0-1]|[0-2]*[0-9])(\/|\-)([0]*[1-9]|[1][0-2])(\/|\-)(\d{4})*)') #Sabtu, 11-1-2000
+    patterns.append('((('+ angka + '\s)*)|(se)*)hari(\s' + ket +'*)') #2 hari yang lalu
+    patterns.append(hari+'\s\(*(([3][0-1]|[0-2]*[0-9])(\/|\-)([0]*[1-9]|[1][0-2])(\/|\-)*(\d{4})*)\)*') #Sabtu (11-1-2000) | Sabtu, 11/1/2000
+    patterns.append(hari+'\,\s(([3][0-1]|[0-2]*[0-9])(\/|\-)([0]*[1-9]|[1][0-2])(\/|\-)(\d{4})*)') #Sabtu, 11-1-2000 | Sabtu, 11/1/2000
     patterns.append('(([3][0-1]|[0-2]*[0-9])(\/|\-)([0]*[1-9]|[1][0-2])(\/|\-)(\d{4}))') #11-1-2000
 
-    patterns.append(hari+'\s\(*(([3][0-1]|[0-2]*[0-9])\s'+bulan+'\s(\d{4})*)\)*') #Sabtu (11 April 2000)
-    patterns.append(hari+'\,\s(([3][0-1]|[0-2]*[0-9])\s'+bulan+'\s(\d{4})*)') #Sabtu, 11 April 2000
-    patterns.append('(([3][0-1]|[0-2]*[0-9])\s'+bulan+'\s(\d{4})*)') #11 April 2000
+    patterns.append(hari+'\s\(*(([3][0-1]|[0-2]*[0-9])('+ket_number+'*)\s'+bulan+'\s(\d{4})*)\)*') #Sabtu (11 April 2000)
+    patterns.append(hari+'\,\s(([3][0-1]|[0-2]*[0-9])('+ket_number+'*)\s'+bulan+'\s(\d{4})*)') #Sabtu, 11 April 2000
+    patterns.append('(([3][0-1]|[0-2]*[0-9])('+ket_number+'*)\s'+bulan+'\s(\d{4})*)') #11 April 2000
+
+    patterns.append('(\d{1,})(\/|\-)(\d{1,})(\/|\-)(\d{1,})') #13/1/14 (DD MM YY)| 12-18-2014 (MM DD YY)
+
     for pattern in patterns:
         hasil = re.search(pattern,stringInput)
         if (hasil):
@@ -55,12 +66,12 @@ def searchDate(stringInput):
     if (hasil):
         return hasil[0]
     else:
-        return 0;
+        return '';
 
 def searchTime(stringInput):
     patterns = []
-    patterns.append('((pukul\s)*\w{1,}(:|.)\w{1,}\swi\w{1,})')
-    patterns.append('\w{1,}:\w{1,}')
+    patterns.append('((pukul\s)*\w{1,}(:|.)\w{1,}\swi\w{1,})') #pukul* 5.06 WIB*
+    patterns.append('(\w{1,}:\w{1,})(:\w{1,})*') #05:03
     for pattern in patterns:
         hasil = re.search(pattern,stringInput)
         if (hasil):
@@ -68,11 +79,16 @@ def searchTime(stringInput):
     if (hasil):
         return hasil[0]
     else:
-        return 0;
+        return '';
 
 
 def searchJumlah(stringInput):
-    hasil = re.search('\d{1,}(\.\d{1,})*\sorang',stringInput)
+    patterns = []
+    patterns.append('\d{1,}((\.|\,)\d{1,})*\s')
+    for pattern in patterns:
+        hasil = re.search(pattern,stringInput)
+        if (hasil):
+            break
     if (hasil):
         return hasil[0]
     else:
@@ -81,17 +97,16 @@ def searchJumlah(stringInput):
 def searchString(stringInput):
     hasil = re.search[0]
 
-#print(searchDate('tanggal 11/11/2000. 11/02/2011 juga'));
-
 #MAIN
 #Masukan file eksternal
-file =  open('data.txt', 'r')
+file =  open('berita3.txt', 'r')
 stringnormal = file.read().replace('\n',' ')
 splitnormal = splitTexttoSentence(stringnormal)
 string = stringnormal.lower()
 #keyword= input().lower()
 split = splitTexttoSentence(string)
-for index in searchKeywordBooyerMoore('terkonfirmasi positif'.lower(),split):
+print(split)
+for index in searchKeywordBooyerMoore('jakarta utara'.lower(),split):
     if (searchDate(split[index])):
         print(searchDate(split[index]))
     else:
