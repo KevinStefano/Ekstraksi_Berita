@@ -1,0 +1,30 @@
+{% extends "web.html" %}
+{% block titile %}Form Page{% endblock %}
+
+{% block content %}
+<div class= "form">
+<form action = "#" method="POST" class="form" >
+    <p style="color:white">Folder :</p>
+    <p style="color:white"></p><input type="text" id="folder" name="folder"><br><br></p>
+    
+    <p style="color:white"><label for="keyword">Keyword:</label></p>
+    <input type="text" id="keyword" name="keyword"><br><br>
+    
+    <p style="color:white"><label for="algoritma">Choose Algoritma:</label></p>
+    <select id="algo" name="algo">
+        <option label="Boyer-Moore">Boyer-Moore</option>
+        <option label="KMP">KMP</option>
+        <option label="Regex">Regex</option>
+    </select>
+
+    <input type="submit" value="submit"><br>
+    {% if error %}
+        {% for hasil in error %}
+             <p class=error style="color:white"> {{ hasil }} </p>
+            {% endfor %}
+  {% endif %}
+  </form>
+  </div>
+
+
+{% endblock content %}

@@ -99,24 +99,53 @@ def searchString(stringInput):
 
 #MAIN
 #Masukan file eksternal
-file =  open('berita3.txt', 'r')
-stringnormal = file.read().replace('\n',' ')
-splitnormal = splitTexttoSentence(stringnormal)
-string = stringnormal.lower()
-#keyword= input().lower()
-split = splitTexttoSentence(string)
-print(split)
-for index in searchKeywordBooyerMoore('jakarta utara'.lower(),split):
-    if (searchDate(split[index])):
-        print(searchDate(split[index]))
+def mainProgram(folder, keyword, jenis):
+    file =  open(folder, 'r')
+    stringnormal = file.read().replace('\n',' ')
+    splitnormal = splitTexttoSentence(stringnormal)
+    string = stringnormal.lower()
+    split = splitTexttoSentence(string)
+    hasil = []
+    if jenis=="Boyer-Moore":
+        for index in searchKeywordBooyerMoore(keyword.lower(),split):
+            if (searchDate(split[index])):
+                hasil.append(searchDate(split[index]))
+            else:
+                hasil.append(searchDate(split[0]))
+
+            if (searchTime(split[index])):
+                hasil.append(searchTime(split[index]))
+            else:
+                hasil.append(searchTime(split[0]))
+            hasil.append(searchJumlah(split[index]))
+            hasil.append(splitnormal[index])
+    elif jenis=="KMP":
+        
+        for index in searchKeywordKMP(keyword.lower(),split):
+            if (searchDate(split[index])):
+                hasil.append(searchDate(split[index]))
+            else:
+                hasil.append(searchDate(split[0]))
+
+            if (searchTime(split[index])):
+                hasil.append(searchTime(split[index]))
+            else:
+                hasil.append(searchTime(split[0]))
+            hasil.append(searchJumlah(split[index]))
+            hasil.append(splitnormal[index])
     else:
-        print(searchDate(split[0]))
+        
+        for index in searchKeywordRegex(keyword.lower(),split):
+            if (searchDate(split[index])):
+                hasil.append(searchDate(split[index]))
+            else:
+                hasil.append(searchDate(split[0]))
 
-    if (searchTime(split[index])):
-        print(searchTime(split[index]))
-    else:
-        print(searchTime(split[0]))
-    print(searchJumlah(split[index]))
-    print(splitnormal[index])
+            if (searchTime(split[index])):
+                hasil.append(searchTime(split[index]))
+            else:
+                hasil.append(searchTime(split[0]))
+            hasil.append(searchJumlah(split[index]))
+            hasil.append(splitnormal[index])
 
-
+    return hasil
