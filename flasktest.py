@@ -14,15 +14,25 @@ def about():
     else:
         return render_template('home.html')
 
+@app.route("/homes", methods = ["POST","GET"])
+def homes():
+    if request.method =="POST":
+        return  redirect(url_for('form'))
+    else:
+        return render_template('home.html')
+
 @app.route("/form", methods = ["POST", "GET"])
 def form():
     if request.method =="POST":
         foldr = request.form["folder"]
         key =request.form["keyword"]
         algo =request.form["algo"]
-        hasil = mainProgram(foldr,key,algo)
-       
-        return render_template('form.html', error= hasil)
+        if foldr!='':
+            hasil = mainProgram(foldr,key,algo)
+            return render_template('form.html', error= hasil)
+        else: 
+            return render_template('form.html')
+        
     else:
         return render_template('form.html')
 

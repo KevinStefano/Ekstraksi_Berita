@@ -3,8 +3,21 @@
 
 {% block content %}
 <div class= "form">
-<form action = "#" method="POST" class="form" >
-    <p style="color:white">Folder :</p>
+<form action = "{{url_for('form')}}" method="POST" > <br><br>
+    <style>
+        p{
+            font-size: large;
+        }
+        input {
+            font-size: large;
+            text-align: center;
+        }
+        select{
+            font-size: large;
+            text-align: center;
+        }
+    </style>
+    <p style="color:white" style="font-size:100px">Folder :</p>
     <p style="color:white"></p><input type="text" id="folder" name="folder"><br><br></p>
     
     <p style="color:white"><label for="keyword">Keyword:</label></p>
@@ -17,14 +30,17 @@
         <option label="Regex">Regex</option>
     </select>
 
-    <input type="submit" value="submit"><br>
+    <input type="submit" name="submit" value="submit"><br>
     {% if error %}
         {% for hasil in error %}
-             <p class=error style="color:white"> {{ hasil }} </p>
+             <p class=error style="color:white" > {{ hasil }} </p>
             {% endfor %}
   {% endif %}
   </form>
   </div>
 
+  <form action = "{{url_for('homes')}}" method="POST">
+    <input type="submit" value="hapus"><br>
+  </form>
 
 {% endblock content %}

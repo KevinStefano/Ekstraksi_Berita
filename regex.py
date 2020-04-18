@@ -6,7 +6,7 @@ hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming
 bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)'
 angka = '(satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|puluh|ratus|ribu|ratus|juta|ribu|belas|sebelas|sepuluh|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|milion)'
 ket = '(sebelumnya|setelahnya|berlalu|usai|yang lalu|yang akan datang|lalu)'
-ket_orang = '(orang|korban|korban jiwa|ODP|PDP)'
+ket_orang = '(orang|korban|korban jiwa|ODP|PDP|people|person)'
 
 ket_number = '(st|rd|nd|th)'
 
@@ -85,7 +85,7 @@ def searchTime(stringInput):
 def searchJumlah(stringInput):
     patterns = []
     patterns.append('\d{1,}((\.|\,)\d{1,})*\s'+ket_orang)
-    patterns.append('\d{1,}((\.|\,)\d{1,})*')
+    #patterns.append('\d{1,}((\.|\,)\d{1,})*')
     for pattern in patterns:
         hasil = re.search(pattern,stringInput)
         if (hasil):
@@ -109,6 +109,8 @@ def mainProgram(folder, keyword, jenis):
     hasil = []
     if jenis=="Boyer-Moore":
         for index in searchKeywordBooyerMoore(keyword.lower(),split):
+            hasil.append("\n")
+            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
             if (searchDate(split[index])):
                 hasil.append(searchDate(split[index]))
             else:
@@ -121,8 +123,9 @@ def mainProgram(folder, keyword, jenis):
             hasil.append("Jumlah : "+ str(searchJumlah(split[index])))
             hasil.append(splitnormal[index])
     elif jenis=="KMP":
-        
         for index in searchKeywordKMP(keyword.lower(),split):
+            hasil.append("\n")
+            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
             if (searchDate(split[index])):
                 hasil.append(searchDate(split[index]))
             else:
@@ -137,6 +140,9 @@ def mainProgram(folder, keyword, jenis):
     else:
         
         for index in searchKeywordRegex(keyword.lower(),split):
+        
+            hasil.append("\n")
+            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
             if (searchDate(split[index])):
                 hasil.append(searchDate(split[index]))
             else:
