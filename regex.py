@@ -6,7 +6,7 @@ hari = '(senin|selasa|rabu|kamis|jumat|sabtu|minggu|sen|sel|rab|kam|jum|sab|ming
 bulan = '(januari|februari|maret|april|mei|juni|juli|agustus|september|oktober|november|desember|jan|feb|mar|apr|jun|jul|agu|ags|sept|sep|okt|nov|des|january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)'
 angka = '(satu|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|puluh|ratus|ribu|ratus|juta|ribu|belas|sebelas|sepuluh|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|fourty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|milion)'
 ket = '(sebelumnya|setelahnya|berlalu|usai|yang lalu|yang akan datang|lalu)'
-ket_orang = '(orang|korban|korban jiwa|ODP|PDP|people|person)'
+ket_orang = 'orang|korban|korban jiwa|ODP|PDP|people|person'
 
 ket_number = '(st|rd|nd|th)'
 
@@ -82,24 +82,50 @@ def searchTime(stringInput):
         return '';
 
 
-def searchJumlah(stringInput):
+def searchJumlah(keyword, stringInput):
+    searchkeyword = re.search(keyword,stringInput)
+    if searchkeyword!=None:
+        idxkeyi, idxkeyj = searchkeyword.span()
+    else:
+        return 0
+
+    min_nilai = -999
+    min = 9999
     patterns = []
-    patterns.append('\d{1,}((\.|\,)\d{1,})*\s'+ket_orang)
-    #patterns.append('\d{1,}((\.|\,)\d{1,})*')
+    #patterns.append('\d{1,}((\.|\,)\d{1,})*\s'+ket_orang)
+    patterns.append('[\d][\.|\,]*[\d]*[\.|\,]*[\d]*\s'+ket_orang)
     for pattern in patterns:
-        hasil = re.search(pattern,stringInput)
-        if (hasil):
-            break
-    if (hasil):
-        return hasil[0]
+        hasils = re.findall(pattern,stringInput)
+        for hasil in (hasils):
+            print(hasil)
+            if hasil!=None and str(hasil)!=str(keyword):
+                i, j = re.search(str(hasil),stringInput).span()
+                if abs(i-idxkeyi)<min:
+                    min_nilai = hasil
+                    min = abs(i-idxkeyi)
+    if (min_nilai!=-999 ):
+        return min_nilai
     else:
         return 0;
+# print(searchJumlah('PDP','5.3 orang, PDP 2000.333 oraang, 3,42 orang' ))
 
-def searchString(stringInput):
-    hasil = re.search[0]
 
-#MAIN
-#Masukan file eksternal
+def kalkulasi(hasil, split, index, splitnormal, keyword, folder):
+    hasil.append("\n")
+    hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
+    if (searchDate(split[index])):
+        hasil.append(searchDate(split[index]))
+    else:
+        hasil.append(searchDate(split[0]))
+
+    if (searchTime(split[index])):
+        hasil.append(searchTime(split[index]))
+    else:
+        hasil.append(searchTime(split[0]))
+    hasil.append("Jumlah : "+ str(searchJumlah(keyword.lower(),split[index])))
+    hasil.append(splitnormal[index])
+    return hasil
+
 def mainProgram(folder, keyword, jenis):
     file =  open(folder, 'r')
     stringnormal = file.read().replace('\n',' ')
@@ -109,50 +135,12 @@ def mainProgram(folder, keyword, jenis):
     hasil = []
     if jenis=="Boyer-Moore":
         for index in searchKeywordBooyerMoore(keyword.lower(),split):
-            hasil.append("\n")
-            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
-            if (searchDate(split[index])):
-                hasil.append(searchDate(split[index]))
-            else:
-                hasil.append(searchDate(split[0]))
-
-            if (searchTime(split[index])):
-                hasil.append(searchTime(split[index]))
-            else:
-                hasil.append(searchTime(split[0]))
-            hasil.append("Jumlah : "+ str(searchJumlah(split[index])))
-            hasil.append(splitnormal[index])
+            hasil = kalkulasi(hasil, split, index, splitnormal, keyword, folder)
     elif jenis=="KMP":
         for index in searchKeywordKMP(keyword.lower(),split):
-            hasil.append("\n")
-            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
-            if (searchDate(split[index])):
-                hasil.append(searchDate(split[index]))
-            else:
-                hasil.append(searchDate(split[0]))
-
-            if (searchTime(split[index])):
-                hasil.append(searchTime(split[index]))
-            else:
-                hasil.append(searchTime(split[0]))
-            hasil.append("Jumlah : "+ str(searchJumlah(split[index])))
-            hasil.append(splitnormal[index])
+            hasil = kalkulasi(hasil, split, index, splitnormal, keyword, folder)
     else:
-        
         for index in searchKeywordRegex(keyword.lower(),split):
-        
-            hasil.append("\n")
-            hasil.append(("--------- Diambil dari : "+ str(folder) + " --------- "))
-            if (searchDate(split[index])):
-                hasil.append(searchDate(split[index]))
-            else:
-                hasil.append(searchDate(split[0]))
-
-            if (searchTime(split[index])):
-                hasil.append(searchTime(split[index]))
-            else:
-                hasil.append(searchTime(split[0]))
-            hasil.append("Jumlah : "+ str(searchJumlah(split[index])))
-            hasil.append(splitnormal[index])
-
+            hasil = kalkulasi(hasil, split, index, splitnormal, keyword, folder)
     return hasil
+
