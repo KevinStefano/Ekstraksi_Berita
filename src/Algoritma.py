@@ -154,7 +154,7 @@ def searchDate(stringInput):
         if (hasil):
             break
     if (hasil):
-        return hasil[0]
+        return hasil.group(0)
     else:
         return '';
 
@@ -167,7 +167,7 @@ def searchTime(stringInput):
         if (hasil):
             break
     if (hasil):
-        return hasil[0]
+        return hasil.group(0)
     else:
         return '';
 
