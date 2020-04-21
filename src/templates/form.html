@@ -1,0 +1,48 @@
+{% extends "web.html" %}
+{% block titile %}Form Page{% endblock %}
+
+{% block content %}
+<div class= "form">
+<form action = "{{url_for('form')}}" method="POST"> <br><br>
+    <style>
+        p{
+            font-size: large;
+        }
+        input {
+            font-size: large;
+            text-align: center;
+        }
+        select{
+            font-size: large;
+            text-align: center;
+        }
+    </style>
+    <p style="color:white" style="font-size:100px">Folder : (Contoh: berita1.txt)</p>
+    <p style="color:white"></p><input type="text" id="folder" name="folder"><br><br></p>
+    
+    <p style="color:white"><label for="keyword">Keyword:</label></p>
+    <input type="text" id="keyword" name="keyword"><br><br>
+    
+    <p style="color:white"><label for="algoritma">Choose Algoritma:</label></p>
+    <select id="algo" name="algo">
+        <option label="Regex">Regex</option>
+        <option label="Boyer-Moore">Boyer-Moore</option>
+        <option label="KMP">KMP</option>
+    </select>
+
+    <input type="submit" name="submit" value="oke"><br><br><br>
+    
+    {% if error %}
+        {% for hasil in error %}
+             <p class=error style="color:white" > {{ hasil }} </p>
+            {% endfor %}
+  {% endif %}
+  
+  <input type="submit" name="submit" value="home">
+  <input type="submit" name="submit" value="about"><br>
+  </form>
+  </div>
+
+  
+
+{% endblock content %}
